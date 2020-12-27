@@ -47,4 +47,12 @@ abstract class Database
     {
         return self::$connection;
     }
+
+    /**
+     *  Set to null connection instance
+     */
+    public static function close()
+    {
+        self::$connection = null;
+    }
 }
