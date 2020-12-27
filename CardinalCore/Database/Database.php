@@ -6,13 +6,17 @@
 
 namespace CardinalCore\Database;
 
+use CardinalCore\Database\Collection\PDOStatementCollection;
 use CardinalCore\Database\Exception\DatabaseException;
 use PDO;
 use PDOException;
 
 abstract class Database
 {
-    private static $connection = null;
+    /**
+     * @var null | PDO
+     */
+    private static ?PDO $connection = null;
 
     /**
      * Open a new database connection and return it.
@@ -20,8 +24,7 @@ abstract class Database
      * @return PDO|null
      * @throws DatabaseException
      */
-    public static function open()
-    {
+    public static function open(): ?PDO {
         if(!self::$connection) {
             $dns = env('DB_CONNECTION').':host='.env('DB_HOST').';dbname='.env('DB_DATABASE');
 
@@ -43,16 +46,78 @@ abstract class Database
      *
      * @return PDO|null
      */
-    public static function connection()
-    {
+    public static function connection(): ?PDO {
         return self::$connection;
     }
 
     /**
      *  Set to null connection instance
      */
-    public static function close()
-    {
+    public static function close() {
         self::$connection = null;
+    }
+
+    /**
+     * Execute PDO Statement.
+     * If fails, it perform a rollback and return false, true otherwise.
+     *
+     * @param \PDOStatement $stmt
+     * @return bool
+     */
+    public static function exec(\PDOStatement $stmt): bool {
+        self::connection()->beginTransaction();
+
+        try{
+            $result = $stmt->execute();
+
+            if($result) {
+                self::connection()->commit();
+            }
+            else {
+                self::connection()->rollBack();
+            }
+        }
+        catch (PDOException $e) {
+            $result = false;
+            self::$connection->rollBack();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Execute a collection of PDO Statement.
+     * If one fails, it perform a rollback and return false, true otherwise.
+     *
+     * @param PDOStatementCollection $stmt
+     * @return bool
+     * @throws DatabaseException
+     */
+    public static function execMore(PDOStatementCollection $stmt): bool {
+        self::connection()->beginTransaction();
+
+        $result = true;
+
+        try{
+            foreach ($stmt as $stm) {
+                if(!$stm->execute()) {
+                    $result = false;
+                    break;
+                }
+            }
+
+            if($result) {
+                self::connection()->commit();
+            }
+            else {
+                self::connection()->rollBack();
+            }
+        }
+        catch (PDOException $e){
+            self::connection()->rollBack();
+            throw new DatabaseException($e->getMessage());
+        }
+
+        return $result;
     }
 }
