@@ -10,5 +10,6 @@ use CardinalCore\Exception\Exception;
 
 class DatabaseException extends Exception
 {
-
+    protected string $errorType = '00';
+    protected int $defaultErrorCode = 1;
 }

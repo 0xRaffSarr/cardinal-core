@@ -9,5 +9,5 @@ namespace CardinalCore\Exception;
 
 class InvalidArgumentException extends \CardinalCore\Exception\Exception
 {
-
+    protected string $errorType = '01';
 }
