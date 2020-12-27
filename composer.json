@@ -1,0 +1,35 @@
+{
+    "name": "xraffsarr/cardinal-core",
+    "description": "Cardinal is a modular web micro-framework inspired by Laravel's MVC structure.",
+    "version": "0.0.1-dev",
+    "homepage": "https://github.com/0xRaffSarr/cardinal-core",
+    "require": {
+        "symfony/http-foundation": "^5.1",
+        "symfony/routing": "^5.1",
+        "symfony/dotenv": "^5.1",
+        "symfony/config": "^5.1",
+        "symfony/http-kernel": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "CardinalCore\\" : "cardinalCore/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Raffaele Sarracino",
+            "email": "contacts@raffaelesarracinno.it",
+            "homepage": "http://raffaelesarracino.it",
+            "role": "Developer"
+        },
+        {
+            "name": "Gennaro Landolfi",
+            "email": "gennarolandolfi@codedwork.it",
+            "homepage": "http://gennarolandolfi.codedwork.it/",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
