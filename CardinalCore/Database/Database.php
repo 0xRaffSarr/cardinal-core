@@ -23,12 +23,12 @@ abstract class Database
     public static function open()
     {
         if(!self::$connection) {
-            $dns = $_ENV['DB_CONNECTION'].':host='.$_ENV['DB_HOST'].';dbname='.$_ENV['DB_DATABASE'];
+            $dns = env('DB_CONNECTION').':host='.env('DB_HOST').';dbname='.env('DB_DATABASE');
 
             try{
-                self::$connection = new PDO($dns,$_ENV['DB_USERNAME'],$_ENV['DB_PASSWORD']);
+                self::$connection = new PDO($dns,env('DB_USERNAME'),env('DB_PASSWORD'));
                 self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                self::$connection->setAttribute(PDO::ATTR_AUTOCOMMIT, $_ENV['DB_AUTOCOMMIT']);
+                self::$connection->setAttribute(PDO::ATTR_AUTOCOMMIT, env('DB_AUTOCOMMIT'));
             }
             catch (PDOException $e)
             {
