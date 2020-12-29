@@ -37,7 +37,7 @@ class Route extends SymfonyRoute
      * @param string $name
      */
     public function name(string $name) {
-        $this->name;
+        $this->name = $name;
     }
 
     /**
