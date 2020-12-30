@@ -6,37 +6,37 @@
 
 namespace CardinalCore\Support\Facade;
 
-
-use CardinalCore\Routing\Routing;
+use CardinalCore\Routing\Component\RouteControllerAction;
+use CardinalCore\Routing\Component\RoutePrefixController;
 
 abstract class Route
 {
     /**
      * @param string $path
      * @param array $action
-     * @return \CardinalCore\Routing\Component\RouteControllerAction
+     * @return RouteControllerAction
      */
-    public static function post(string $path, array $action = []): \CardinalCore\Routing\Component\RouteControllerAction
+    public static function post(string $path, array $action = []): RouteControllerAction
     {
-        return Routing::create()->addRoute(['POST'], $path, $action);
+        return app()->routing()->addRoute(['POST'], $path, $action);
     }
 
     /**
      * @param string $path
      * @param array $action
-     * @return \CardinalCore\Routing\Component\RouteControllerAction
+     * @return RouteControllerAction
      */
-    public static function get(string $path, array $action = []): \CardinalCore\Routing\Component\RouteControllerAction
+    public static function get(string $path, array $action = []): RouteControllerAction
     {
-        return Routing::create()->addRoute(['GET', 'HEAD'], $path, $action);
+        return app()->routing()->addRoute(['GET', 'HEAD'], $path, $action);
     }
 
     /**
      * @param string $prefix
-     * @return \CardinalCore\Routing\Component\RoutePrefixController
+     * @return RoutePrefixController
      */
-    public static function prefix(string $prefix): \CardinalCore\Routing\Component\RoutePrefixController
+    public static function prefix(string $prefix): RoutePrefixController
     {
-        return Routing::create()->prefix($prefix);
+        return app()->routing()->prefix($prefix);
     }
 }
