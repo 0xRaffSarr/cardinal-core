@@ -31,3 +31,15 @@ if(! function_exists('app')) {
         return \CardinalCore\App::appInstance() ?? \CardinalCore\App::create('cardinal', '');
     }
 }
+
+if(! function_exists('systPath')) {
+    /**
+     * Return all system path if key is null or a specific path. If path not exists return null.
+     *
+     * @param string|null $key
+     * @return array|null
+     */
+    function systPath(string $key = null) {
+        return app()->paths($key);
+    }
+}
