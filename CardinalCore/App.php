@@ -46,6 +46,15 @@ class App
     }
 
     /**
+     * Return the app name
+     *
+     * @return string|null
+     */
+    public function appName() {
+        return $this->appName;
+    }
+
+    /**
      * Return the current request
      *
      * @return Request
