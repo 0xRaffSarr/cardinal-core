@@ -12,6 +12,7 @@ use CardinalCore\Routing\Component\Route;
 use CardinalCore\Routing\Component\RouteControllerAction;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
+use CardinalCore\Routing\Component\RoutePrefixController;
 
 class Routing
 {
@@ -91,4 +92,11 @@ class Routing
         return self::$instance = self::$instance ?? new static($request);
     }
 
+    /**
+     * @param string $prefix
+     * @return RoutePrefixController
+     */
+    public function prefix(string $prefix) {
+        return new RoutePrefixController($prefix, $this->prefix, $this->prefixMiddleware);
+    }
 }
