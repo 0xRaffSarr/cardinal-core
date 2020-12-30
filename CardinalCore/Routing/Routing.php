@@ -39,7 +39,7 @@ class Routing
         $this->routesCollection = new RouteCollection();
     }
 
-    private function addRoute($methods, $uri, $action) {
+    public function addRoute($methods, $uri, $action) {
         return $this->add($this->createRoute($methods, $uri, $action));
     }
 
@@ -61,7 +61,7 @@ class Routing
      * @param $action
      * @return Route
      */
-    public function createRoute($methods, $uri, $action) {
+    private function createRoute($methods, $uri, $action) {
         $prefix = $this->prefix;
 
         if(substr($uri, 0, 1) !== '/') {
