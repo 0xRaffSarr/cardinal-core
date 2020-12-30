@@ -21,3 +21,13 @@ if(! function_exists('env')) {
         return $default;
     }
 }
+
+if(! function_exists('app')) {
+    /**
+     * @param $key
+     * @return \CardinalCore\App
+     */
+    function app($key = null) {
+        return \CardinalCore\App::appInstance() ?? \CardinalCore\App::create('cardinal', '');
+    }
+}
