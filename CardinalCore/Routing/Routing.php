@@ -40,10 +40,22 @@ class Routing
         $this->routesCollection = new RouteCollection();
     }
 
+    /**
+     * @param $methods
+     * @param $uri
+     * @param $action
+     * @return RouteControllerAction
+     */
     public function addRoute($methods, $uri, $action) {
         return $this->add($this->createRoute($methods, $uri, $action));
     }
 
+    /**
+     * Adda a route to collection
+     *
+     * @param Route $route
+     * @return RouteControllerAction
+     */
     private function add(Route $route) {
         foreach ($route->getMethods() as $method) {
             $this->routes[$method][$route->getPath()] = $route;
@@ -57,6 +69,8 @@ class Routing
     }
 
     /**
+     * Create a new route
+     *
      * @param $methods
      * @param $uri
      * @param $action
