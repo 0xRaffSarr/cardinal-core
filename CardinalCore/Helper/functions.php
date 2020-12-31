@@ -25,10 +25,10 @@ if(! function_exists('env')) {
 if(! function_exists('app')) {
     /**
      * @param $key
-     * @return \CardinalCore\App
+     * @return \CardinalCore\App|null
      */
     function app($key = null) {
-        return \CardinalCore\App::appInstance() ?? \CardinalCore\App::create('cardinal', '');
+        return \CardinalCore\App::appInstance();
     }
 }
 
