@@ -30,7 +30,7 @@ class App
      */
     protected Routing $routing;
 
-    private function __construct($name, $url)
+    protected function __construct($name, $url)
     {
         $this->appName = $name;
         $this->appURL = $url;
@@ -101,7 +101,7 @@ class App
     /**
      * Load the system paths
      */
-    private function loadPaths() {
+    protected function loadPaths() {
         $appRoot = realpath(dirname((new \ReflectionClass($this))->getFileName()).'/..');
         $sourcePath = realpath($appRoot.'/src');
 
@@ -121,7 +121,7 @@ class App
      * @param $path
      * @return array
      */
-    private function findDir($path) {
+    protected function findDir($path) {
         $dir = [];
         $scandir = array_diff(scandir($path), ['.', '..']);
 
