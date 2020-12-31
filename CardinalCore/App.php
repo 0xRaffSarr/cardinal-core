@@ -58,7 +58,7 @@ class App
          */
         call_user_func($this->kernelAbstract .'::instance');
 
-        $this->logger = Logger::instance(realpath($this->paths('app_root').'/'.$this->logPath));
+        $this->logger = Logger::instance($this->paths('app_root').'/'.$this->logPath);
     }
 
     /**
