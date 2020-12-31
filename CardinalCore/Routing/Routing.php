@@ -84,16 +84,28 @@ class Routing
         }
 
         if(substr($prefix, strlen($prefix)-1, 1) === '/') {
-            $prefix = ubstr($prefix, 0, strlen($prefix)-1);
+            $prefix = substr($prefix, 0, strlen($prefix)-1);
         }
 
-        $route = new Route($prefix.$uri, $action, $methods);
+        $route = new Route($prefix.$uri, [
+            '_controller' => $action[0],
+            '_method' => $action[1]
+        ], [], [], '', [], $methods);
 
         if(count($this->prefixMiddleware) > 0) {
             $route->middleware($this->prefixMiddleware);
         }
 
         return $route;
+    }
+
+    /**
+     * Return array with all registered routes
+     *
+     * @return false|mixed
+     */
+    public function all() {
+        return call_user_func_array('array_merge', $this->routes);
     }
 
     /**
