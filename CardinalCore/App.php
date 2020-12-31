@@ -7,28 +7,34 @@
 namespace CardinalCore;
 
 
+use CardinalCore\Exception\Exception;
 use CardinalCore\Http\Request;
+use CardinalCore\Kernel\Contracts\Provider;
+use CardinalCore\Kernel\Kernel;
 use CardinalCore\Routing\Routing;
 use mysql_xdevapi\Result;
 
 class App
 {
-    protected static $instance;
+    private static $instance;
 
-    protected $appName;
+    private $appName;
 
-    protected $appURL;
+    private $appURL;
 
-    protected $paths = [];
+    private $paths = [];
     /**
      * @var Request
      */
-    protected Request $currentRequest;
+    private Request $currentRequest;
 
     /**
      * @var Routing
      */
-    protected Routing $routing;
+    private Routing $routing;
+
+    protected $kernelAbstract = Kernel::class;
+
 
     protected function __construct($name, $url)
     {
@@ -43,6 +49,15 @@ class App
          * Load the system dir from the root of the project
          */
         $this->loadPaths();
+
+        /*
+         * Create a kernel instance
+         */
+        call_user_func($this->kernelAbstract .'::instance');
+        /*
+         * Boot system provider
+         */
+        //$this->bootProvider();
     }
 
     /**
@@ -76,7 +91,7 @@ class App
     /**
      * Return all system path if key is null or a specific path. If path not exists return null.
      *
-     * @return array
+     * @return array|string
      */
     public function paths(string $key = null) {
         if(is_null($key)) {
@@ -135,6 +150,21 @@ class App
         }
 
         return $dir;
+    }
+
+    public function bootProvider() {
+        foreach (Kernel::instance()->getProviders() as $provider) {
+            try {
+                $class = new \ReflectionClass($provider);
+
+                if($class->implementsInterface(Provider::class)) {
+                    ($class->newInstanceWithoutConstructor())->boot();
+                }
+            }
+            catch (Exception $e) {
+                //TODO: add log action
+            }
+        }
     }
 
     /**
