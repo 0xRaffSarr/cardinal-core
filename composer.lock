@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5573ca34e224ac4c7cc4c3cc831a6906",
+    "content-hash": "76316a617c6873c671cc95d4950d944e",
     "packages": [
         {
             "name": "psr/event-dispatcher",
@@ -1378,15 +1378,60 @@
                 }
             ],
             "time": "2020-12-16T17:02:19+00:00"
+        },
+        {
+            "name": "xraffsarr/php-logger",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/0xRaffSarr/php-logger.git",
+                "reference": "78acb3a53fea9b9c146db8887cc4d91f905840fb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/0xRaffSarr/php-logger/zipball/78acb3a53fea9b9c146db8887cc4d91f905840fb",
+                "reference": "78acb3a53fea9b9c146db8887cc4d91f905840fb",
+                "shasum": ""
+            },
+            "require": {
+                "psr/log": "^1"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpLogger\\": "Logger/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "0xRaffSarr",
+                    "email": "contacts@raffaelesarracino.it"
+                }
+            ],
+            "description": "A simple PHP logger",
+            "support": {
+                "issues": "https://github.com/0xRaffSarr/php-logger/issues",
+                "source": "https://github.com/0xRaffSarr/php-logger/tree/main"
+            },
+            "time": "2020-12-31T14:49:58+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "xraffsarr/php-logger": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "ext-pdo": "*"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
 }
