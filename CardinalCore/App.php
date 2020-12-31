@@ -12,7 +12,7 @@ use CardinalCore\Http\Request;
 use CardinalCore\Kernel\Contracts\Provider;
 use CardinalCore\Kernel\Kernel;
 use CardinalCore\Routing\Routing;
-use mysql_xdevapi\Result;
+use PhpLogger\Logger;
 
 class App
 {
@@ -23,6 +23,8 @@ class App
     private $appURL;
 
     private $paths = [];
+
+    private $logger;
     /**
      * @var Request
      */
@@ -35,6 +37,7 @@ class App
 
     protected $kernelAbstract = Kernel::class;
 
+    protected $logPath = 'log/';
 
     protected function __construct($name, $url)
     {
@@ -54,10 +57,8 @@ class App
          * Create a kernel instance
          */
         call_user_func($this->kernelAbstract .'::instance');
-        /*
-         * Boot system provider
-         */
-        //$this->bootProvider();
+
+        $this->logger = Logger::instance(realpath($this->paths('app_root').'/'.$this->logPath));
     }
 
     /**
