@@ -10,7 +10,7 @@
         "symfony/config": "^5.1",
         "symfony/http-kernel": "^5.1",
         "ext-pdo": "*",
-        "xraffsarr/php-logger": "9999999-dev"
+        "xraffsarr/php-logger": "^1.0"
     },
     "autoload": {
         "psr-4": {
