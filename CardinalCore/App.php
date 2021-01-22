@@ -8,6 +8,7 @@ namespace CardinalCore;
 
 
 use CardinalCore\Exception\Exception;
+use CardinalCore\Http\Controller;
 use CardinalCore\Http\Request;
 use CardinalCore\Kernel\Contracts\Provider;
 use CardinalCore\Kernel\Kernel;
@@ -184,6 +185,8 @@ class App
      * @return false|mixed|Response
      */
     public function handle() {
+        $response = null;
+
         //Getting route information
         $routeAction = $this->routing()->matcher()->match($this->request()->getPathInfo());
         //Retrieving controller information and method to be performed
@@ -191,11 +194,21 @@ class App
         // Add action information to request
         $this->request()->attributes->add(['_controller' => $action]);
 
+        // get controller
         $controller = $this->kernel->controllerResolver()->getController($this->request());
 
-        $arguments = $this->kernel->argumentResolver()->getArguments($this->request(), $controller);
+        /*
+         * check if required controller extends Cardinal Controller
+         * If it not extends Cardinal Controller, not call it.
+         */
+        if(is_a($controller[0], Controller::class)) {
+            $arguments = $this->kernel->argumentResolver()->getArguments($this->request(), $controller);
 
-        $response = call_user_func_array([$controller[0], $controller[1]], $arguments);
+            $response = call_user_func_array([$controller[0], $controller[1]], $arguments);
+        }
+        else {
+            $response = new Response('Invalid controller');
+        }
 
         // if action in void method, generate a response to sent
         if(!$response) {
