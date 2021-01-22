@@ -10,6 +10,7 @@ namespace CardinalCore\Routing;
 use CardinalCore\Http\Request;
 use CardinalCore\Routing\Component\Route;
 use CardinalCore\Routing\Component\RouteControllerAction;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use CardinalCore\Routing\Component\RoutePrefixController;
@@ -23,6 +24,8 @@ class Routing
     protected RequestContext $context;
 
     protected RouteCollection $routesCollection;
+
+    protected UrlMatcher $matcher;
 
     protected string $prefix = '';
     protected array $prefixMiddleware = [];
@@ -38,6 +41,8 @@ class Routing
         $this->context->fromRequest($this->request);
 
         $this->routesCollection = new RouteCollection();
+
+        $this->matcher = new UrlMatcher($this->routesCollection, $this->context);
     }
 
     /**
@@ -106,6 +111,15 @@ class Routing
      */
     public function all() {
         return call_user_func_array('array_merge', $this->routes);
+    }
+
+    /**
+     * Return the UrlMatcher
+     *
+     * @return UrlMatcher
+     */
+    public function matcher() {
+        return $this->matcher;
     }
 
     /**

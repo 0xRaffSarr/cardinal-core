@@ -13,6 +13,7 @@ use CardinalCore\Kernel\Contracts\Provider;
 use CardinalCore\Kernel\Kernel;
 use CardinalCore\Routing\Routing;
 use PhpLogger\Logger;
+use Symfony\Component\HttpFoundation\Response;
 
 class App
 {
@@ -30,6 +31,8 @@ class App
      */
     private Request $currentRequest;
 
+    private Kernel $kernel;
+
     /**
      * @var Routing
      */
@@ -46,18 +49,20 @@ class App
 
         //inizializzazione della request
         $this->currentRequest = Request::createFromGlobals();
+
+        /*
+        * Load the system dir from the root of the project
+        */
+        $this->loadPaths();
+
         //inizializzazione routing
         $this->routing = Routing::create($this->currentRequest);
         /*
-         * Load the system dir from the root of the project
-         */
-        $this->loadPaths();
-
-        /*
          * Create a kernel instance
          */
-        call_user_func($this->kernelAbstract .'::instance');
+        $this->kernel = call_user_func($this->kernelAbstract .'::instance');
 
+        // set the path for the php logger
         $this->logger = Logger::instance($this->paths('app_root').'/'.$this->logPath);
     }
 
@@ -153,11 +158,16 @@ class App
         return $dir;
     }
 
+    /**
+     * Boot the provider app
+     *
+     * @throws \ReflectionException
+     */
     public function bootProvider() {
         foreach (Kernel::instance()->getProviders() as $provider) {
             try {
                 $class = new \ReflectionClass($provider);
-
+                //check that class implements Provider interface before call the boot methods
                 if($class->implementsInterface(Provider::class)) {
                     ($class->newInstanceWithoutConstructor())->boot();
                 }
@@ -166,6 +176,33 @@ class App
                 //TODO: add log action
             }
         }
+    }
+
+    /**
+     * The starting point for the execution of the wheels and related actions.
+     *
+     * @return false|mixed|Response
+     */
+    public function handle() {
+        //Getting route information
+        $routeAction = $this->routing()->matcher()->match($this->request()->getPathInfo());
+        //Retrieving controller information and method to be performed
+        $action = $routeAction['_controller'].'::'.$routeAction['_method'];
+        // Add action information to request
+        $this->request()->attributes->add(['_controller' => $action]);
+
+        $controller = $this->kernel->controllerResolver()->getController($this->request());
+
+        $arguments = $this->kernel->argumentResolver()->getArguments($this->request(), $controller);
+
+        $response = call_user_func_array([$controller[0], $controller[1]], $arguments);
+
+        // if action in void method, generate a response to sent
+        if(!$response) {
+            $response = new Response(ob_get_clean());
+        }
+
+        return $response;
     }
 
     /**

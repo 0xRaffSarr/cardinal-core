@@ -7,6 +7,9 @@
 namespace CardinalCore\Kernel;
 
 
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+
 class Kernel
 {
     private static $instance;
@@ -18,12 +21,16 @@ class Kernel
      */
     protected array $provider = [];
 
+    private ControllerResolver $controllerResolver;
+    private ArgumentResolver $argumentResolver;
+
     /**
      * Kernel constructor.
      */
     private function __construct()
     {
-
+        $this->controllerResolver = new ControllerResolver();
+        $this->argumentResolver = new ArgumentResolver();
     }
 
     /**
@@ -33,6 +40,20 @@ class Kernel
      */
     public function getProviders() {
         return $this->provider;
+    }
+
+    /**
+     * @return ControllerResolver
+     */
+    public function controllerResolver() {
+        return $this->controllerResolver;
+    }
+
+    /**
+     * @return ArgumentResolver
+     */
+    public function argumentResolver() {
+        return $this->argumentResolver;
     }
 
     /**
