@@ -6,13 +6,18 @@
 
 namespace CardinalCore\Database\Traits;
 
+use CardinalCore\Database\Database;
+
 trait ModelActions
 {
     /**
      * Delete the model information
      */
     public function delete () {
-        //TODO: Implement delete methods
+        $stmt = Database::connection()->prepare('DELETE FROM '.$this->tableName() .' WHERE '.$this->primaryKey().' = :keyValue');
+        $stmt->bindParam(':keyValue', $this->{$this->primaryKey()});
+
+        return Database::exec($stmt);
     }
 
     /**
