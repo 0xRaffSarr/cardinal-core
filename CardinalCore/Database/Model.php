@@ -37,6 +37,13 @@ abstract class Model implements ModelContracts
     protected bool $time = true;
 
     /**
+     * Table name of the database
+     *
+     * @var string
+     */
+    protected string $table;
+
+    /**
      * The name of the "created at" column.
      *
      * @var string|null
@@ -50,8 +57,43 @@ abstract class Model implements ModelContracts
      */
     const UPDATED_AT = 'updated_at';
 
+    /**
+     * Model constructor.
+     */
     public function __construct() {
+        // if table name is not set, get the table name based on model name
+        if(!$this->table) {
+            $this->table = $this->getTableName();
+        }
+
         $this->loadAttributes();
+    }
+
+    /**
+     * Return the table name
+     *
+     * @return string
+     */
+    public function tableName() {
+        return $this->table;
+    }
+
+    /**
+     * Return the primary key name
+     *
+     * @return string
+     */
+    public function primaryKey() {
+        return $this->primaryKey;
+    }
+
+    /**
+     * Return the primary key type
+     *
+     * @return string
+     */
+    public function primaryKeyType() {
+        return $this->primaryKeyType;
     }
 
     /**
@@ -81,5 +123,16 @@ abstract class Model implements ModelContracts
         $attributes = array_merge($attributes, $this->fillable);
 
         return array_unique($attributes);
+    }
+
+    /**
+     * Get the table name based on model name
+     *
+     * @return string
+     */
+    private function getTableName() {
+        $x = new \ReflectionClass($this);
+
+        return strtolower($x->getShortName()).'s';
     }
 }
