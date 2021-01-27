@@ -42,6 +42,12 @@ abstract class Model implements ModelContracts
      * @var string
      */
     protected string $table;
+    /**
+     * Indicates whether the model exists within the database.
+     *
+     * @var bool
+     */
+    protected bool $exists = false;
 
     /**
      * The name of the "created at" column.
@@ -119,9 +125,9 @@ abstract class Model implements ModelContracts
                 static::UPDATED_AT
             ]);
         }
-
+        //generate model attributes
         $attributes = array_merge($attributes, $this->fillable);
-
+        //duplicate attribute removal
         return array_unique($attributes);
     }
 
