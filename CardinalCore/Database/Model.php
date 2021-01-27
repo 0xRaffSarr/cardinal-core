@@ -141,4 +141,18 @@ abstract class Model implements ModelContracts
 
         return strtolower($x->getShortName()).'s';
     }
+
+    /**
+     * Set the model attributes value
+     *
+     * @param array $values
+     */
+    protected function setAttributes(array $values) {
+        foreach ($this->getModelAttributes() as $attribute) {
+            //check that the model fillable attributes, exists in values array
+            if(array_key_exists($attribute, $values)) {
+                $this->{$attribute} = $values[$attribute];
+            }
+        }
+    }
 }
