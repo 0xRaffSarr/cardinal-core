@@ -22,7 +22,7 @@ interface Model
      * @param array $values
      * @return mixed
      */
-    public function create(array $values);
+    public static function create(array $values);
 
     /**
      * Update a model information and save it into database
