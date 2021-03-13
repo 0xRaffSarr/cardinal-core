@@ -39,9 +39,10 @@ abstract class Model implements ModelContracts
     /**
      * Table name of the database
      *
-     * @var string
+     * @var null|string
      */
-    protected string $table;
+    protected ?string $table = null;
+
     /**
      * Indicates whether the model exists within the database.
      *
@@ -68,7 +69,7 @@ abstract class Model implements ModelContracts
      */
     public function __construct() {
         // if table name is not set, get the table name based on model name
-        if(!$this->table) {
+        if(is_null($this->table)) {
             $this->table = $this->getTableName();
         }
 
@@ -122,7 +123,8 @@ abstract class Model implements ModelContracts
         if($this->time) {
             $attributes = array_merge([
                 static::CREATED_AT,
-                static::UPDATED_AT
+                static::UPDATED_AT,
+                $this->primaryKey()
             ]);
         }
         //generate model attributes
