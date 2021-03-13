@@ -7,6 +7,8 @@
 namespace CardinalCore;
 
 
+use CardinalCore\Database\Database;
+use CardinalCore\Database\Exception\DatabaseException;
 use CardinalCore\Exception\Exception;
 use CardinalCore\Http\Controller;
 use CardinalCore\Http\Request;
@@ -65,6 +67,11 @@ class App
 
         // set the path for the php logger
         $this->logger = Logger::instance($this->paths('app_root').'/'.$this->logPath);
+
+        //database connection check
+        if (!Database::open()) {
+            throw new DatabaseException('Cannot connection to database');
+        }
     }
 
     /**
