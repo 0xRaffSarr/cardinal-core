@@ -10,7 +10,8 @@
         "symfony/config": "^5.1",
         "symfony/http-kernel": "^5.1",
         "ext-pdo": "*",
-        "xraffsarr/php-logger": "^1.0"
+        "xraffsarr/php-logger": "^1.0",
+        "nesbot/carbon": "^2.45"
     },
     "autoload": {
         "psr-4": {
