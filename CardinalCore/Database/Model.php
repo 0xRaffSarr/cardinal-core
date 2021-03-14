@@ -107,6 +107,9 @@ abstract class Model implements ModelContracts
      * Load the model attributes and set it to null
      */
     protected function loadAttributes() {
+
+        $this->{$this->primaryKey()} = null;
+
         foreach ($this->getModelAttributes() as $key) {
             $this->{$key} = null;
         }
@@ -123,8 +126,7 @@ abstract class Model implements ModelContracts
         if($this->time) {
             $attributes = array_merge([
                 static::CREATED_AT,
-                static::UPDATED_AT,
-                $this->primaryKey()
+                static::UPDATED_AT
             ]);
         }
         //generate model attributes
