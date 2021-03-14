@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use CardinalCore\Database\Database;
 use CardinalCore\Database\Exception\DatabaseException;
 use CardinalCore\Database\Exception\ModelException;
+use CardinalCore\Database\Exception\ModelNotFoundException;
 use CardinalCore\Database\Model;
 
 trait ModelActions
@@ -114,7 +115,7 @@ trait ModelActions
         $result = static::find($key);
 
         if(is_null($result)) {
-            throw new ModelException('Data not found in database');
+            throw new ModelNotFoundException();
         }
 
         return $result;
