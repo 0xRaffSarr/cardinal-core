@@ -17,6 +17,7 @@ use CardinalCore\Kernel\Kernel;
 use CardinalCore\Routing\Routing;
 use PhpLogger\Logger;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class App
 {
@@ -194,28 +195,7 @@ class App
     public function handle() {
         $response = null;
 
-        //Getting route information
-        $routeAction = $this->routing()->matcher()->match($this->request()->getPathInfo());
-        //Retrieving controller information and method to be performed
-        $action = $routeAction['_controller'].'::'.$routeAction['_method'];
-        // Add action information to request
-        $this->request()->attributes->add(['_controller' => $action]);
-
-        // get controller
-        $controller = $this->kernel->controllerResolver()->getController($this->request());
-
-        /*
-         * check if required controller extends Cardinal Controller
-         * If it not extends Cardinal Controller, not call it.
-         */
-        if(is_a($controller[0], Controller::class)) {
-            $arguments = $this->kernel->argumentResolver()->getArguments($this->request(), $controller);
-
-            $response = call_user_func_array([$controller[0], $controller[1]], $arguments);
-        }
-        else {
-            $response = new Response('Invalid controller');
-        }
+        $response = $this->run();
 
         // if action in void method, generate a response to sent
         if(!$response) {
@@ -243,5 +223,48 @@ class App
      */
     public static function appInstance() {
         return self::$instance;
+    }
+
+    /**
+     * Run the route action
+     *
+     * @return false|mixed|Response
+     */
+    protected function run() {
+
+        $response = null;
+
+        try {
+            //Getting route information
+            $routeAction = $this->routing()->matcher()->match($this->request()->getPathInfo());
+            //Retrieving controller information and method to be performed
+            $action = $routeAction['_controller'].'::'.$routeAction['_method'];
+            // Add action information to request
+            $this->request()->attributes->add(['_controller' => $action]);
+
+            // get controller
+            $controller = $this->kernel->controllerResolver()->getController($this->request());
+
+            /*
+             * check if required controller extends Cardinal Controller
+             * If it not extends Cardinal Controller, not call it.
+             */
+            if(is_a($controller[0], Controller::class)) {
+                $arguments = $this->kernel->argumentResolver()->getArguments($this->request(), $controller);
+
+                $response = call_user_func_array([$controller[0], $controller[1]], $arguments);
+            }
+            else {
+                $response = new Response('Invalid controller');
+            }
+        }
+        catch (ResourceNotFoundException $e) {
+            $response = new Response('Not found', 404);
+        }
+        catch (Exception $e) {
+            $response = new Response('An error occurred', 500);
+        }
+
+        return $response;
     }
 }
